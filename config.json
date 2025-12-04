@@ -1,0 +1,9 @@
+{
+  "features": [
+    "deno-fmt",
+    "whitespace-trimmer",
+    "deno-test-runner",
+    "pytest-runner",
+    "manual-format"
+  ]
+}
