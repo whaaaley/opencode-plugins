@@ -3,6 +3,8 @@
  *
  * Automatically trims trailing whitespace and ensures files end with a single newline
  * when OpenCode edits or writes files.
+ *
+ * Note: Skips TypeScript/JavaScript files as deno fmt handles whitespace for them.
  */
 
 import type { Plugin } from '@opencode-ai/plugin'
@@ -19,6 +21,11 @@ export const WhitespaceTrimmer: Plugin = async ({ project, client, $, directory,
 
       if (!filePath) {
         return // No file to process
+      }
+
+      // Skip TypeScript/JavaScript files - deno fmt handles them
+      if (filePath.endsWith('.ts') || filePath.endsWith('.tsx') || filePath.endsWith('.js') || filePath.endsWith('.jsx')) {
+        return
       }
 
       try {
