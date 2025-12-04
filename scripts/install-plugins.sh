@@ -32,19 +32,19 @@ for plugin in $(list_plugins "$FEATURES_DIR"); do
   ln -s "$plugin" "$target"
 done
 
-# Install tools
+# Install tools (copy instead of symlink for module resolution)
 for tool in $(list_tools "$FEATURES_DIR"); do
   feature_name=$(get_feature_name "$tool")
   target="$TOOL_DIR/$feature_name"
 
-  # Remove existing symlink/file if it exists
-  if [ -e "$target" ] || [ -L "$target" ]; then
+  # Remove existing file if it exists
+  if [ -e "$target" ]; then
     rm "$target"
   fi
 
-  # Create symlink
+  # Copy file instead of symlinking
   echo "  $feature_name"
-  ln -s "$tool" "$target"
+  cp "$tool" "$target"
 done
 
 echo ""

@@ -1,4 +1,4 @@
-import { describe, it, beforeEach } from '@std/testing/bdd'
+import { beforeEach, describe, it } from '@std/testing/bdd'
 import { assertExists } from '@std/assert'
 import { copy, ensureDir } from '@std/fs'
 import { join } from '@std/path'
