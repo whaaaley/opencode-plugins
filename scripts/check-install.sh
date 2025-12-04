@@ -33,22 +33,11 @@ for plugin in $(list_plugins "$FEATURES_DIR"); do
   feature_name=$(get_feature_name "$plugin")
   target="$PLUGIN_DIR/$feature_name"
 
-  if [ ! -e "$target" ] && [ ! -L "$target" ]; then
+  if [ ! -e "$target" ]; then
     echo "  $feature_name - not installed"
     all_installed=false
-  elif [ -L "$target" ]; then
-    link_target=$(readlink "$target")
-    if [ "$link_target" = "$plugin" ]; then
-      echo "  $feature_name - installed"
-    else
-      echo "  $feature_name - incorrect symlink"
-      echo "    Expected: $plugin"
-      echo "    Actual:   $link_target"
-      all_installed=false
-    fi
   else
-    echo "  $feature_name - exists but not a symlink"
-    all_installed=false
+    echo "  $feature_name - installed"
   fi
 done
 
@@ -57,22 +46,11 @@ for tool in $(list_tools "$FEATURES_DIR"); do
   feature_name=$(get_feature_name "$tool")
   target="$TOOL_DIR/$feature_name"
 
-  if [ ! -e "$target" ] && [ ! -L "$target" ]; then
+  if [ ! -e "$target" ]; then
     echo "  $feature_name - not installed"
     all_installed=false
-  elif [ -L "$target" ]; then
-    link_target=$(readlink "$target")
-    if [ "$link_target" = "$tool" ]; then
-      echo "  $feature_name - installed"
-    else
-      echo "  $feature_name - incorrect symlink"
-      echo "    Expected: $tool"
-      echo "    Actual:   $link_target"
-      all_installed=false
-    fi
   else
-    echo "  $feature_name - exists but not a symlink"
-    all_installed=false
+    echo "  $feature_name - installed"
   fi
 done
 
@@ -83,6 +61,7 @@ if [ "$all_installed" = true ]; then
   exit 0
 else
   echo "Some features not installed correctly"
+  echo ""
   echo "Run ./scripts/install-plugins.sh to fix"
   exit 1
 fi

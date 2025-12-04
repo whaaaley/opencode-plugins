@@ -22,17 +22,17 @@ for plugin in $(list_plugins "$FEATURES_DIR"); do
   feature_name=$(get_feature_name "$plugin")
   target="$PLUGIN_DIR/$feature_name"
 
-  # Remove existing symlink/file if it exists
-  if [ -e "$target" ] || [ -L "$target" ]; then
+  # Remove existing file if it exists
+  if [ -e "$target" ]; then
     rm "$target"
   fi
 
-  # Create symlink
+  # Copy file to global directory
   echo "  $feature_name"
-  ln -s "$plugin" "$target"
+  cp "$plugin" "$target"
 done
 
-# Install tools (copy instead of symlink for module resolution)
+# Install tools
 for tool in $(list_tools "$FEATURES_DIR"); do
   feature_name=$(get_feature_name "$tool")
   target="$TOOL_DIR/$feature_name"
@@ -42,7 +42,7 @@ for tool in $(list_tools "$FEATURES_DIR"); do
     rm "$target"
   fi
 
-  # Copy file instead of symlinking
+  # Copy file to global directory
   echo "  $feature_name"
   cp "$tool" "$target"
 done
@@ -51,4 +51,5 @@ echo ""
 echo "Features installed:"
 echo "  Plugins -> $PLUGIN_DIR"
 echo "  Tools -> $TOOL_DIR"
+echo ""
 echo "Run ./scripts/check-install.sh to verify"
