@@ -8,6 +8,7 @@
  */
 
 import type { Plugin } from '@opencode-ai/plugin'
+import { queueToast } from '../toast-queue/queue.ts'
 
 export const WhitespaceTrimmer: Plugin = async ({ project, client, $, directory, worktree }) => {
   return {
@@ -41,16 +42,16 @@ export const WhitespaceTrimmer: Plugin = async ({ project, client, $, directory,
         // Only write if content changed
         if (trimmed !== content) {
           await Bun.write(filePath, trimmed)
-          await client.tui.showToast({
+          await queueToast(client, {
             body: {
               message: `Cleaned whitespace in ${filePath.split('/').pop()}`,
-              variant: 'success',
+              variant: 'info',
             },
           })
         }
       } catch (error) {
         const err = error as Error
-        await client.tui.showToast({
+        await queueToast(client, {
           body: {
             message: `Error trimming whitespace: ${err.message}`,
             variant: 'error',

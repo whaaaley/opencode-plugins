@@ -24,16 +24,16 @@ echo ""
 mkdir -p "$PLUGIN_DIR"
 mkdir -p "$TOOL_DIR"
 
-# Clean up existing plugins and tools
+# Clean up existing installations
 echo "Cleaning up existing installations..."
-rm -f "$PLUGIN_DIR"/*.ts "$PLUGIN_DIR"/*.js
-rm -f "$TOOL_DIR"/*.ts "$TOOL_DIR"/*.js
+rm -rf "$PLUGIN_DIR"/*
+rm -rf "$TOOL_DIR"/*
 echo ""
 
 # Read enabled features from config.json
 enabled_features=$(jq -r '.features[]' "$CONFIG_FILE")
 
-# Install plugins
+# Install features by copying entire directories
 for feature_name in $enabled_features; do
   feature_dir="$FEATURES_DIR/$feature_name"
 
@@ -42,30 +42,20 @@ for feature_name in $enabled_features; do
     continue
   fi
 
-  # Check for plugin file
-  if [ -f "$feature_dir/plugin.ts" ]; then
-    target="$PLUGIN_DIR/$feature_name.ts"
-    rm -f "$target"
-    cp "$feature_dir/plugin.ts" "$target"
-    echo "  $feature_name.ts (plugin)"
-  elif [ -f "$feature_dir/plugin.js" ]; then
-    target="$PLUGIN_DIR/$feature_name.js"
-    rm -f "$target"
-    cp "$feature_dir/plugin.js" "$target"
-    echo "  $feature_name.js (plugin)"
+  # Check for plugin file and copy entire directory to plugin dir
+  if [ -f "$feature_dir/plugin.ts" ] || [ -f "$feature_dir/plugin.js" ]; then
+    target="$PLUGIN_DIR/$feature_name"
+    rm -rf "$target"
+    cp -r "$feature_dir" "$target"
+    echo "  $feature_name/ (plugin)"
   fi
 
-  # Check for tool file
-  if [ -f "$feature_dir/tool.ts" ]; then
-    target="$TOOL_DIR/$feature_name.ts"
-    rm -f "$target"
-    cp "$feature_dir/tool.ts" "$target"
-    echo "  $feature_name.ts (tool)"
-  elif [ -f "$feature_dir/tool.js" ]; then
-    target="$TOOL_DIR/$feature_name.js"
-    rm -f "$target"
-    cp "$feature_dir/tool.js" "$target"
-    echo "  $feature_name.js (tool)"
+  # Check for tool file and copy entire directory to tool dir
+  if [ -f "$feature_dir/tool.ts" ] || [ -f "$feature_dir/tool.js" ]; then
+    target="$TOOL_DIR/$feature_name"
+    rm -rf "$target"
+    cp -r "$feature_dir" "$target"
+    echo "  $feature_name/ (tool)"
   fi
 done
 

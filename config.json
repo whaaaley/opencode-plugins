@@ -1,5 +1,6 @@
 {
   "features": [
+    "toast-queue",
     "deno-fmt",
     "whitespace-trimmer",
     "deno-test-runner",

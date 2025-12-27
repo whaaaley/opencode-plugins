@@ -5,6 +5,7 @@
  */
 
 import type { Plugin } from '@opencode-ai/plugin'
+import { queueToast } from '../toast-queue/queue.ts'
 
 export const DenoFormatter: Plugin = async ({ project, client, $, directory, worktree }) => {
   return {
@@ -37,23 +38,23 @@ export const DenoFormatter: Plugin = async ({ project, client, $, directory, wor
 
         if (exitCode !== 0) {
           const stderr = await new Response(proc.stderr).text()
-          await client.tui.showToast({
+          await queueToast(client, {
             body: {
               message: `Deno fmt error: ${stderr}`,
               variant: 'error',
             },
           })
         } else {
-          await client.tui.showToast({
+          await queueToast(client, {
             body: {
               message: `Formatted ${filePath.split('/').pop()}`,
-              variant: 'success',
+              variant: 'info',
             },
           })
         }
       } catch (error) {
         const err = error as Error
-        await client.tui.showToast({
+        await queueToast(client, {
           body: {
             message: `Error running deno fmt: ${err.message}`,
             variant: 'error',
